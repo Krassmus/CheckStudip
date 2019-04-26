@@ -39,7 +39,7 @@ class RepairController extends PluginController
             if (is_dir($path)) {
                 foreach ((array) @scandir($path) as $file) {
                     if (!in_array($file, array(".", ".."))) {
-                        $this->deleteFile($path."/".$file);
+                        $this->checkFile($path."/".$file);
                     }
                 }
             }
