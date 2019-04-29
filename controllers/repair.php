@@ -10,7 +10,9 @@ class RepairController extends PluginController
         if ($GLOBALS['TMP_PATH']) {
 
             foreach ((array) @scandir($GLOBALS['TMP_PATH']) as $file) {
-                $this->deleteFile($GLOBALS['TMP_PATH'] . "/" . $file);
+                if (!in_array($file, array(".", "..")) && !is_link($file)) {
+                    $this->deleteFile($GLOBALS['TMP_PATH'] . "/" . $file);
+                }
             }
             PageLayout::postSuccess(_("TMP-Ordner wurde geleert."));
         } else {
@@ -19,19 +21,10 @@ class RepairController extends PluginController
         $this->redirect(PluginEngine::getURL($this->plugin, array(), "check/all"));
     }
 
-    public function check_for_links_action() {
-        if (!$GLOBALS['perm']->have_perm("root")) {
-            throw new AccessDeniedException();
-        }
-        if ($GLOBALS['TMP_PATH']) {
-            foreach ((array) @scandir($GLOBALS['TMP_PATH']) as $file) {
-                $this->checkFile($GLOBALS['TMP_PATH'] . "/" . $file);
-            }
-        }
-        $this->render_nothing();
-    }
-
     protected function checkFile($path) {
+        if (substr($path, -2) === "..") {
+            return;
+        }
         if (is_link($path)) {
             echo $path."<br>\n";
         }
@@ -47,7 +40,10 @@ class RepairController extends PluginController
     }
 
     protected function deleteFile($path) {
-        if (!in_array($path, array(".", "..")) && !is_link($path)) {
+        if (substr($path, -2) === "..") {
+            return;
+        }
+        if (!is_link($path)) {
             if (is_dir($path)) {
                 foreach ((array) @scandir($path) as $file) {
                     if (!in_array($file, array(".", ".."))) {
