@@ -59,6 +59,9 @@ class RepairController extends PluginController
 
     public function cache_action()
     {
+        if (!$GLOBALS['perm']->have_perm("root")) {
+            throw new AccessDeniedException();
+        }
         PageLayout::postMessage(MessageBox::success(_("Cache wurde geleert.")));
         SimpleORMap::expireTableScheme();
         $this->redirect(PluginEngine::getURL($this->plugin, array(), "check/all"));

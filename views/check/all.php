@@ -23,9 +23,9 @@ $actions->addLink(
     Icon::create("trash", "clickable"),
     array('onClick' => "return window.confirm('"._("Wirklich leeren?")."');")
 );
-/*$actions->addLink(
-    sprintf(_("TMP-Ordner nach SymLinks prüfen"), $fds_number, $fds_unit),
-    PluginEngine::getURL($plugin, array(), "repair/check_for_links"),
-    Icon::create("question-circle", "clickable")
-);*/
+$actions->addLink(
+    _("JSON-Daten exportieren"),
+    PluginEngine::getURL($plugin, array(), "reporter/json/".md5(Config::get()->STUDIP_INSTALLATION_ID."Reporter")),
+    Icon::create("export", "clickable")
+);
 Sidebar::Get()->addWidget($actions);

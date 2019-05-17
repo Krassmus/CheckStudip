@@ -5,6 +5,9 @@ class CheckController extends PluginController
     public function all_action()
     {
         Navigation::activateItem("/admin/locations/checkstudip");
+        if (!$GLOBALS['perm']->have_perm("root")) {
+            throw new AccessDeniedException();
+        }
         $this->results = array();
 
         if (mb_internal_encoding() !== "UTF-8") {
