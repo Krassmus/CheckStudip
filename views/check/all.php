@@ -7,6 +7,23 @@
     <?= MessageBox::success(_("Ihr Stud.IP sieht gut aus! Es konnten keine Probleme festgestellt werden.")) ?>
 <? endif ?>
 
+<table class="default hover">
+    <thead>
+        <tr>
+            <th><?= _("Indikator") ?></th>
+            <th><?= _("Wert") ?></th>
+        </tr>
+    </thead>
+    <tbody>
+        <? foreach ($report as $index => $value) : ?>
+        <tr>
+            <td><?= htmlReady($index) ?></td>
+            <td><?= htmlReady($value) ?></td>
+        </tr>
+        <? endforeach ?>
+    </tbody>
+</table>
+
 
 <?
 
@@ -22,6 +39,12 @@ $actions->addLink(
     PluginEngine::getURL($plugin, array(), "repair/tmp"),
     Icon::create("trash", "clickable"),
     array('onClick' => "return window.confirm('"._("Wirklich leeren?")."');")
+);
+$actions->addLink(
+    _("SOAP-Abfrage testen"),
+    PluginEngine::getURL($plugin, array(), "testsoap/compose"),
+    Icon::create($plugin->getPluginURL()."/assets/soap.svg", "clickable"),
+    array('data-dialog' => 1)
 );
 $actions->addLink(
     _("JSON-Daten exportieren"),
